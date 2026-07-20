@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="hero" style="min-height: 40vh;">
+    <div class="container">
+        <p class="text-primary-custom fw-semibold mb-2 fade-in">About Me</p>
+        <h1 class="display-heading fade-in">Get to Know Me</h1>
+        <p class="lead fade-in" style="max-width: 600px;">
+            My journey in technology, education, and the skills I've acquired along the way.
+        </p>
+    </div>
+</section>
+
+<!-- Biography -->
+<section class="section">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper fade-in">
+                    <img src="{{ url_for('static', filename='img/profile.jpg') }}"
+                         class="hero-image"
+                         alt="Akbar Maulana"
+                         loading="lazy">
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <p class="text-primary-custom fw-semibold mb-2 slide-up">Biography</p>
+                <h2 class="mb-3 slide-up">Who Am I?</h2>
+                <p class="text-muted slide-up">
+                    Saya adalah Akbar Maulana, seorang AI Developer dan Full Stack Developer
+                    yang berbasis di Indonesia. Saya memiliki ketertarikan besar dalam
+                    membangun solusi teknologi yang inovatif dan bermanfaat.
+                </p>
+                <p class="text-muted slide-up">
+                    Perjalanan saya di dunia teknologi dimulai dari keinginan untuk memahami
+                    bagaimana teknologi dapat menyelesaikan masalah nyata. Saat ini, saya fokus
+                    pada pengembangan AI dan aplikasi web modern.
+                </p>
+                <p class="text-muted slide-up">
+                    Selain coding, saya juga seorang pelari yang percaya bahwa disiplin fisik
+                    dan mental saling berkaitan dalam mencapai performa terbaik.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Skills -->
+<section class="section section-gray">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="text-primary-custom fw-semibold mb-2 slide-up">Skills</p>
+            <h2 class="slide-up">Technical Expertise</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-code-slash text-primary-custom me-2"></i>Frontend</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">HTML5</span>
+                        <span class="badge-tech">CSS3</span>
+                        <span class="badge-tech">JavaScript</span>
+                        <span class="badge-tech">Bootstrap 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-server text-primary-custom me-2"></i>Backend</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">Python</span>
+                        <span class="badge-tech">Flask</span>
+                        <span class="badge-tech">PostgreSQL</span>
+                        <span class="badge-tech">REST API</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-robot text-primary-custom me-2"></i>AI / ML</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">NLP</span>
+                        <span class="badge-tech">Computer Vision</span>
+                        <span class="badge-tech">TensorFlow</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-tools text-primary-custom me-2"></i>DevOps</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">Docker</span>
+                        <span class="badge-tech">Git</span>
+                        <span class="badge-tech">CI/CD</span>
+                        <span class="badge-tech">AWS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-database text-primary-custom me-2"></i>Database</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">PostgreSQL</span>
+                        <span class="badge-tech">SQLite</span>
+                        <span class="badge-tech">Redis</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100 p-4">
+                    <h5 class="mb-3"><i class="bi bi-gear text-primary-custom me-2"></i>Tools</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge-tech">VS Code</span>
+                        <span class="badge-tech">Linux</span>
+                        <span class="badge-tech">Figma</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Timeline -->
+<section class="section">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="text-primary-custom fw-semibold mb-2 slide-up">Timeline</p>
+            <h2 class="slide-up">Education & Experience</h2>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="timeline">
+                    <div class="timeline-item slide-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="text-primary-custom fw-semibold small">2024 — Present</span>
+                            <h5 class="mt-1 mb-2">AI Developer</h5>
+                            <p class="text-muted mb-0">
+                                Focused on building AI-powered applications and research in machine learning.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item slide-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="text-primary-custom fw-semibold small">2023 — Present</span>
+                            <h5 class="mt-1 mb-2">Full Stack Developer</h5>
+                            <p class="text-muted mb-0">
+                                Building modern web applications with Flask, PostgreSQL, and Bootstrap.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item slide-up">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="text-primary-custom fw-semibold small">2022</span>
+                            <h5 class="mt-1 mb-2">Started Programming Journey</h5>
+                            <p class="text-muted mb-0">
+                                Began learning Python and web development fundamentals.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Certificates -->
+<section class="section section-gray">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <p class="text-primary-custom fw-semibold mb-2 slide-up">Certificates</p>
+            <h2 class="slide-up">Certifications & Achievements</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                 style="width: 48px; height: 48px;">
+                                <i class="bi bi-patch-check text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Sample Certificate</h5>
+                                <small class="text-muted">Issued 2025</small>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted flex-grow-1">
+                            Replace this with your actual certificate name and description.
+                        </p>
+                        <span class="badge-tech" style="width: fit-content;">Credential ID: XXXXX</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                 style="width: 48px; height: 48px;">
+                                <i class="bi bi-patch-check text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Sample Certificate</h5>
+                                <small class="text-muted">Issued 2025</small>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted flex-grow-1">
+                            Replace this with your actual certificate name and description.
+                        </p>
+                        <span class="badge-tech" style="width: fit-content;">Credential ID: XXXXX</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 slide-up">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                 style="width: 48px; height: 48px;">
+                                <i class="bi bi-patch-check text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">Sample Certificate</h5>
+                                <small class="text-muted">Issued 2025</small>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted flex-grow-1">
+                            Replace this with your actual certificate name and description.
+                        </p>
+                        <span class="badge-tech" style="width: fit-content;">Credential ID: XXXXX</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
