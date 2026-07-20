@@ -10,3 +10,8 @@ class Config:
         "sqlite:///" + os.path.join(basedir, "database", "pelarikenya.db"),
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Ensure database directory exists
+    db_dir = os.path.join(basedir, "database")
+    if not os.path.exists(db_dir):
+        os.makedirs(db_dir)

@@ -20,8 +20,10 @@ COPY --from=builder /install /usr/local
 
 COPY . .
 
+RUN mkdir -p /app/database
+
 RUN adduser --disabled-password --gecos "" appuser
-RUN mkdir -p /app/database && chown -R appuser:appuser /app
+RUN chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 5000
