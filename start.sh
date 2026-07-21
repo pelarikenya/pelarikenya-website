@@ -1,6 +1,20 @@
 #!/bin/bash
-# Run migrations before starting the app
-flask db upgrade
+# Create tables if no migration versions exist (first deploy)
+if [ ! "$(ls -A migrations/versions/ 2>/dev/null)" ]; then
+    echo "No migrations found, creating tables..."
+    python -c "
+from app import app, db
+with app.app_context():
+    db.create_all()
+    print('Tables created')
+"
+    # Generate initial migration
+    flask db migrate -m 'initial migration'
+    flask db upgrade
+else
+    echo "Running migrations..."
+    flask db upgrade
+fi
 
 # Create admin if not exists
 python -c "
