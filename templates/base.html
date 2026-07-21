@@ -7,6 +7,21 @@
     <meta name="keywords" content="Akbar Maulana, AI Developer, Full Stack Developer, Portfolio, Pelarikenya">
     <meta name="author" content="Akbar Maulana">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}Pelarikenya — Akbar Maulana{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}AI Developer, Full Stack Developer, and Runner. Portfolio showcasing projects, experience, and journey in AI and Web Development.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pelarikenya.my.id">
+    <meta property="og:image" content="https://pelarikenya.my.id{{ url_for('static', filename='img/profile.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw_title %}Pelarikenya — Akbar Maulana{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_description %}AI Developer, Full Stack Developer, and Runner.{% endblock %}">
+
     <title>{% block title %}Pelarikenya{% endblock %} — Akbar Maulana</title>
 
     <!-- Google Fonts: Poppins -->

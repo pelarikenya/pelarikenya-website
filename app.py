@@ -1,17 +1,21 @@
 import os
 import re
+import logging
 from datetime import datetime, timezone
 from functools import wraps
 
 import bleach
 import markdown
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, flash, redirect, url_for, session, abort
+from flask import (
+    Flask, render_template, request, flash, redirect, url_for, abort,
+)
+from flask_login import login_user, logout_user, login_required, current_user
 from markupsafe import Markup
 
 from config import Config
-from extensions import db, csrf
-from models import Contact, Blog, Project
+from extensions import db, csrf, login_manager, migrate
+from models import Contact, Blog, Project, User
 
 load_dotenv()
 
@@ -33,8 +37,6 @@ ALLOWED_ATTRIBUTES = {
     "span": ["class"],
     "div": ["class"],
 }
-
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
 
 def render_markdown(text):
@@ -59,8 +61,9 @@ def generate_slug(title):
 
 def admin_required(f):
     @wraps(f)
+    @login_required
     def decorated(*args, **kwargs):
-        if not session.get("admin_authenticated"):
+        if not current_user.is_authenticated or not current_user.is_admin:
             abort(403)
         return f(*args, **kwargs)
     return decorated
@@ -70,8 +73,25 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # Logging
+    if not app.debug and not app.testing:
+        logging.basicConfig(level=logging.INFO)
+        logger = logging.getLogger(__name__)
+        logger.info("Pelarikenya website started")
+
     db.init_app(app)
     csrf.init_app(app)
+    login_manager.init_app(app)
+    migrate.init_app(app, db)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db.session.get(User, int(user_id))
+
+    @app.context_processor
+    def inject_now():
+        from datetime import datetime, timezone
+        return {"now": datetime.now(timezone.utc)}
 
     with app.app_context():
         db.create_all()
@@ -122,10 +142,21 @@ def register_routes(app):
     def blog():
         page = request.args.get("page", 1, type=int)
         category = request.args.get("category", None)
+        search = request.args.get("q", "").strip()
         query = Blog.query.filter_by(is_published=True)
 
         if category:
             query = query.filter_by(category=category)
+
+        if search:
+            search_term = f"%{search}%"
+            query = query.filter(
+                db.or_(
+                    Blog.title.ilike(search_term),
+                    Blog.excerpt.ilike(search_term),
+                    Blog.content.ilike(search_term),
+                )
+            )
 
         posts = query.order_by(Blog.created_at.desc()).paginate(
             page=page, per_page=6, error_out=False
@@ -134,7 +165,11 @@ def register_routes(app):
         categories = [c[0] for c in categories]
 
         return render_template(
-            "blog.html", posts=posts, categories=categories, current_category=category
+            "blog.html",
+            posts=posts,
+            categories=categories,
+            current_category=category,
+            search_query=search,
         )
 
     @app.route("/blog/<slug>")
@@ -146,6 +181,11 @@ def register_routes(app):
     @app.route("/contact", methods=["GET", "POST"])
     def contact():
         if request.method == "POST":
+            # Honeypot check — bots fill this, humans don't
+            if request.form.get("website"):
+                flash("Pesan berhasil dikirim!", "success")
+                return redirect(url_for("contact"))
+
             name = request.form.get("name", "").strip()
             email = request.form.get("email", "").strip()
             subject = request.form.get("subject", "").strip()
@@ -173,19 +213,68 @@ def register_routes(app):
     # Admin Routes — Auth
     # -------------------------------------------
 
+    @app.route("/admin/register", methods=["GET", "POST"])
+    def admin_register():
+        # Only accessible when no admin user exists yet
+        if User.query.first():
+            abort(404)
+
+        if request.method == "POST":
+            name = request.form.get("name", "").strip()
+            email = request.form.get("email", "").strip()
+            password = request.form.get("password", "")
+            confirm = request.form.get("confirm_password", "")
+
+            if not name or not email or not password:
+                flash("Semua field wajib diisi.", "danger")
+                return redirect(url_for("admin_register"))
+
+            if len(password) < 6:
+                flash("Password minimal 6 karakter.", "danger")
+                return redirect(url_for("admin_register"))
+
+            if password != confirm:
+                flash("Konfirmasi password tidak cocok.", "danger")
+                return redirect(url_for("admin_register"))
+
+            if User.query.filter_by(email=email).first():
+                flash("Email sudah terdaftar.", "danger")
+                return redirect(url_for("admin_register"))
+
+            user = User(name=name, email=email, is_admin=True)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+
+            login_user(user)
+            flash("Akun admin berhasil dibuat!", "success")
+            return redirect(url_for("admin_blog_list"))
+
+        return render_template("admin/register.html")
+
     @app.route("/admin/login", methods=["GET", "POST"])
     def admin_login():
+        if current_user.is_authenticated:
+            return redirect(url_for("admin_blog_list"))
+
         if request.method == "POST":
+            email = request.form.get("email", "").strip()
             password = request.form.get("password", "")
-            if password == ADMIN_PASSWORD:
-                session["admin_authenticated"] = True
+
+            user = User.query.filter_by(email=email).first()
+
+            if user and user.check_password(password):
+                login_user(user)
+                flash(f"Selamat datang, {user.name}!", "success")
                 return redirect(url_for("admin_blog_list"))
-            flash("Password salah.", "danger")
+
+            flash("Email atau password salah.", "danger")
         return render_template("admin/login.html")
 
     @app.route("/admin/logout")
+    @login_required
     def admin_logout():
-        session.pop("admin_authenticated", None)
+        logout_user()
         return redirect(url_for("home"))
 
     # -------------------------------------------
@@ -357,6 +446,32 @@ def register_routes(app):
 
         flash("Project berhasil dihapus!", "success")
         return redirect(url_for("admin_project_list"))
+
+    # -------------------------------------------
+    # Admin Routes — Contacts
+    # -------------------------------------------
+
+    @app.route("/admin/contacts")
+    @admin_required
+    def admin_contact_list():
+        contacts = Contact.query.order_by(Contact.created_at.desc()).all()
+        return render_template("admin/contact_list.html", contacts=contacts)
+
+    @app.route("/admin/contacts/<int:contact_id>")
+    @admin_required
+    def admin_contact_detail(contact_id):
+        contact = db.get_or_404(Contact, contact_id)
+        return render_template("admin/contact_detail.html", contact=contact)
+
+    @app.route("/admin/contacts/<int:contact_id>/delete", methods=["POST"])
+    @admin_required
+    def admin_contact_delete(contact_id):
+        contact = db.get_or_404(Contact, contact_id)
+        db.session.delete(contact)
+        db.session.commit()
+
+        flash("Pesan berhasil dihapus!", "success")
+        return redirect(url_for("admin_contact_list"))
 
 
 def register_error_handlers(app):

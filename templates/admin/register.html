@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login — Pelarikenya</title>
+    <title>Admin Register — Pelarikenya</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -53,8 +53,8 @@
 <body>
     <div class="login-card">
         <div class="text-center mb-4">
-            <h2>Admin Panel</h2>
-            <p class="text-muted">Masuk ke panel admin.</p>
+            <h2>Daftar Admin</h2>
+            <p class="text-muted">Buat akun admin baru.</p>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -68,23 +68,33 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('admin_login') }}">
+        <form method="POST" action="{{ url_for('admin_register') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="name" class="form-label fw-medium">Nama Lengkap</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       placeholder="Nama kamu" required autofocus>
+            </div>
             <div class="mb-3">
                 <label for="email" class="form-label fw-medium">Email</label>
                 <input type="email" class="form-control" id="email" name="email"
-                       placeholder="admin@email.com" required autofocus>
+                       placeholder="admin@email.com" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label fw-medium">Password</label>
                 <input type="password" class="form-control" id="password" name="password"
-                       placeholder="Masukkan password" required>
+                       placeholder="Minimal 6 karakter" required minlength="6">
             </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label fw-medium">Konfirmasi Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                       placeholder="Ulangi password" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Daftar</button>
         </form>
 
         <div class="text-center mt-3">
-            <p class="text-muted small mb-1">Belum punya akun? <a href="{{ url_for('admin_register') }}">Daftar di sini</a></p>
+            <p class="text-muted small mb-1">Sudah punya akun? <a href="{{ url_for('admin_login') }}">Login di sini</a></p>
             <a href="{{ url_for('home') }}" class="text-muted small">&larr; Back to Home</a>
         </div>
     </div>

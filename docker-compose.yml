@@ -3,8 +3,9 @@ services:
     build: .
     ports:
       - "5000:5000"
+    env_file:
+      - .env
     environment:
-      - SECRET_KEY=dev-secret-change-in-production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/pelarikenya
     depends_on:
       db:

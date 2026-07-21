@@ -39,6 +39,10 @@
 
                 <form id="contactForm" method="POST" action="{{ url_for('contact') }}" class="slide-up">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <!-- Honeypot anti-spam — leave empty -->
+                    <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                        <input type="text" name="website" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="row g-3">
 
                         <div class="col-md-6">
@@ -117,12 +121,10 @@
                         <a href="https://github.com/pelarikenya" target="_blank" rel="noopener noreferrer" class="social-icon social-icon-primary" aria-label="GitHub">
                             <i class="bi bi-github"></i>
                         </a>
-                        <a href="#" class="social-icon social-icon-primary" aria-label="LinkedIn">
+                        <!-- Uncomment and add your LinkedIn URL -->
+                        <!-- <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" class="social-icon social-icon-primary" aria-label="LinkedIn">
                             <i class="bi bi-linkedin"></i>
-                        </a>
-                        <a href="#" class="social-icon social-icon-primary" aria-label="Twitter">
-                            <i class="bi bi-twitter-x"></i>
-                        </a>
+                        </a> -->
                         <a href="https://www.instagram.com/dstakbarr/" target="_blank" rel="noopener noreferrer" class="social-icon social-icon-primary" aria-label="Instagram">
                             <i class="bi bi-instagram"></i>
                         </a>

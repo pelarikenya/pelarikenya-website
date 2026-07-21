@@ -1,10 +1,26 @@
 import os
+import secrets
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
+def _get_secret_key():
+    key = os.environ.get("SECRET_KEY", "")
+    if not key or key == "dev-secret-change-in-production":
+        # Auto-generate and persist a key so sessions survive restarts
+        key_file = os.path.join(basedir, ".secret_key")
+        if os.path.exists(key_file):
+            with open(key_file) as f:
+                key = f.read().strip()
+        else:
+            key = secrets.token_hex(32)
+            with open(key_file, "w") as f:
+                f.write(key)
+    return key
+
+
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
+    SECRET_KEY = _get_secret_key()
 
     db_uri = os.environ.get(
         "DATABASE_URL",
