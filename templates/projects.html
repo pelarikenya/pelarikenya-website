@@ -23,10 +23,16 @@
 
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-primary btn-sm" data-filter="all">All</button>
-                    <button class="btn btn-outline-primary btn-sm" data-filter="ai">AI / ML</button>
-                    <button class="btn btn-outline-primary btn-sm" data-filter="web">Web Dev</button>
-                    <button class="btn btn-outline-primary btn-sm" data-filter="devops">DevOps</button>
+                    <a href="{{ url_for('projects') }}"
+                       class="btn btn-sm {{ 'btn-primary' if not current_category else 'btn-outline-primary' }}">
+                        All
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{{ url_for('projects', category=cat) }}"
+                       class="btn btn-sm {{ 'btn-primary' if current_category == cat else 'btn-outline-primary' }}">
+                        {{ cat|capitalize }}
+                    </a>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -48,87 +54,53 @@
 <section class="section-sm pt-0">
     <div class="container">
 
+        {% if projects %}
         <div class="row g-4" id="projectsGrid">
 
-            <div class="col-md-6 col-lg-4" data-category="ai">
+            {% for project in projects %}
+            <div class="col-md-6 col-lg-4" data-category="{{ project.category }}">
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
                             <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
                                  style="width: 48px; height: 48px;">
-                                <i class="bi bi-robot text-white"></i>
+                                <i class="bi {{ project.icon }} text-white"></i>
                             </div>
-                            <h5 class="card-title mb-0">AI Chatbot</h5>
+                            <h5 class="card-title mb-0">{{ project.title }}</h5>
                         </div>
                         <p class="card-text text-muted flex-grow-1">
-                            Intelligent chatbot with context-aware responses using NLP.
+                            {{ project.description }}
                         </p>
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">Python</span>
-                            <span class="badge-tech">NLP</span>
-                            <span class="badge-tech">Flask</span>
+                            {% for tech in project.get_tech_list() %}
+                            <span class="badge-tech">{{ tech }}</span>
+                            {% endfor %}
                         </div>
                         <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-github me-1"></i>Code</a>
-                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Demo</a>
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-github me-1"></i>Code
+                            </a>
+                            {% endif %}
+                            {% if project.demo_url %}
+                            <a href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>Demo
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4" data-category="web">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
-                                 style="width: 48px; height: 48px;">
-                                <i class="bi bi-speedometer2 text-white"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Analytics Dashboard</h5>
-                        </div>
-                        <p class="card-text text-muted flex-grow-1">
-                            Real-time analytics dashboard with interactive data visualizations.
-                        </p>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">JavaScript</span>
-                            <span class="badge-tech">Chart.js</span>
-                            <span class="badge-tech">PostgreSQL</span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-github me-1"></i>Code</a>
-                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4" data-category="devops">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
-                                 style="width: 48px; height: 48px;">
-                                <i class="bi bi-cloud-arrow-up text-white"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Cloud Deploy Tool</h5>
-                        </div>
-                        <p class="card-text text-muted flex-grow-1">
-                            Automated deployment pipeline for containerized applications.
-                        </p>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">Docker</span>
-                            <span class="badge-tech">AWS</span>
-                            <span class="badge-tech">CI/CD</span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-github me-1"></i>Code</a>
-                            <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Demo</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
 
         </div>
+        {% else %}
+        <div class="text-center py-5 slide-up">
+            <i class="bi bi-folder display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No projects yet</h4>
+            <p class="text-muted">Check back later or add projects from the admin panel.</p>
+        </div>
+        {% endif %}
 
     </div>
 </section>

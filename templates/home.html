@@ -173,99 +173,49 @@
             <p class="text-muted slide-up">Beberapa project terbaik yang pernah saya kerjakan.</p>
         </div>
 
+        {% if featured_projects %}
         <div class="row g-4">
-
+            {% for project in featured_projects %}
             <div class="col-md-6 col-lg-4 slide-up">
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
                             <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
                                  style="width: 48px; height: 48px;">
-                                <i class="bi bi-robot text-white"></i>
+                                <i class="bi {{ project.icon }} text-white"></i>
                             </div>
-                            <h5 class="card-title mb-0">AI Chatbot</h5>
+                            <h5 class="card-title mb-0">{{ project.title }}</h5>
                         </div>
                         <p class="card-text text-muted flex-grow-1">
-                            Intelligent chatbot powered by NLP with context-aware responses.
+                            {{ project.description }}
                         </p>
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">Python</span>
-                            <span class="badge-tech">NLP</span>
-                            <span class="badge-tech">Flask</span>
+                            {% for tech in project.get_tech_list() %}
+                            <span class="badge-tech">{{ tech }}</span>
+                            {% endfor %}
                         </div>
                         <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary">
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-github me-1"></i>Code
                             </a>
-                            <a href="#" class="btn btn-sm btn-primary">
+                            {% endif %}
+                            {% if project.demo_url %}
+                            <a href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
                                 <i class="bi bi-box-arrow-up-right me-1"></i>Demo
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4 slide-up">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
-                                 style="width: 48px; height: 48px;">
-                                <i class="bi bi-cloud-arrow-up text-white"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Cloud Deploy Tool</h5>
-                        </div>
-                        <p class="card-text text-muted flex-grow-1">
-                            Automated deployment pipeline for containerized applications.
-                        </p>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">Docker</span>
-                            <span class="badge-tech">AWS</span>
-                            <span class="badge-tech">CI/CD</span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-github me-1"></i>Code
-                            </a>
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="bi bi-box-arrow-up-right me-1"></i>Demo
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 slide-up">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-primary-custom d-flex align-items-center justify-content-center me-3"
-                                 style="width: 48px; height: 48px;">
-                                <i class="bi bi-speedometer2 text-white"></i>
-                            </div>
-                            <h5 class="card-title mb-0">Dashboard Analytics</h5>
-                        </div>
-                        <p class="card-text text-muted flex-grow-1">
-                            Real-time analytics dashboard with interactive data visualizations.
-                        </p>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-tech">JavaScript</span>
-                            <span class="badge-tech">Chart.js</span>
-                            <span class="badge-tech">PostgreSQL</span>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-github me-1"></i>Code
-                            </a>
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="bi bi-box-arrow-up-right me-1"></i>Demo
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="text-center py-5 slide-up">
+            <p class="text-muted">No featured projects yet.</p>
+        </div>
+        {% endif %}
 
         <div class="text-center mt-5 slide-up">
             <a href="{{ url_for('projects') }}" class="btn btn-outline-primary btn-lg">

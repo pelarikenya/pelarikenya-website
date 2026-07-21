@@ -38,6 +38,7 @@
                 {% endwith %}
 
                 <form id="contactForm" method="POST" action="{{ url_for('contact') }}" class="slide-up">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
 
                         <div class="col-md-6">

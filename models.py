@@ -41,3 +41,27 @@ class Blog(db.Model):
 
     def __repr__(self):
         return f"<Blog {self.title}>"
+
+
+class Project(db.Model):
+    __tablename__ = "projects"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    icon = db.Column(db.String(50), nullable=False, default="bi-robot")
+    category = db.Column(db.String(50), nullable=False, default="web")
+    tech_stack = db.Column(db.String(300), nullable=False)
+    github_url = db.Column(db.String(300), nullable=True)
+    demo_url = db.Column(db.String(300), nullable=True)
+    is_featured = db.Column(db.Boolean, nullable=False, default=False)
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
+
+    def get_tech_list(self):
+        return [t.strip() for t in self.tech_stack.split(",") if t.strip()]
+
+    def __repr__(self):
+        return f"<Project {self.title}>"

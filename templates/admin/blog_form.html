@@ -14,6 +14,7 @@
 <div class="card">
     <div class="card-body">
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
 
                 <div class="col-12">
@@ -48,8 +49,11 @@
                 <div class="col-12">
                     <label for="content" class="form-label fw-medium">Content * (Markdown supported)</label>
                     <textarea class="form-control" id="content" name="content" rows="15"
-                              placeholder="Write your post content here..."
+                              placeholder="Write your post content here using Markdown..."
                               style="font-family: 'Courier New', monospace; font-size: 0.9rem;">{{ post.content if post else '' }}</textarea>
+                    <small class="text-muted">
+                        Supports Markdown: **bold**, *italic*, # headings, `code`, ```code blocks```, [links](url), ![images](url), lists, blockquotes, tables.
+                    </small>
                 </div>
 
                 <div class="col-12 d-flex gap-2">
