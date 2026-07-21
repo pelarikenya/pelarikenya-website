@@ -94,10 +94,16 @@ def create_app():
         return {"now": datetime.now(timezone.utc)}
 
     with app.app_context():
-        # Only create tables if no migrations exist (dev fallback)
-        import os
-        if not os.path.exists(os.path.join(app.root_path, '..', 'migrations', 'env.py')):
-            db.create_all()
+        # Auto-run migrations on startup (for Render free tier without Shell)
+        from flask_migrate import upgrade
+        upgrade()
+        # Create admin user if none exists
+        if not User.query.first():
+            admin = User(name="Akbar", email="admin@pelarikenya.my.id", is_admin=True)
+            admin.set_password("admin123")
+            db.session.add(admin)
+            db.session.commit()
+            app.logger.info("Default admin user created")
 
     register_routes(app)
     register_error_handlers(app)
