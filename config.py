@@ -27,6 +27,10 @@ class Config:
         "sqlite:///" + os.path.join(basedir, "database", "pelarikenya.db"),
     )
 
+    # Render PostgreSQL uses postgres:// but SQLAlchemy requires postgresql://
+    if db_uri.startswith("postgres://"):
+        db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+
     # If SQLite path is relative, make it absolute
     if db_uri.startswith("sqlite:///") and not db_uri.startswith("sqlite:////"):
         relative_path = db_uri.replace("sqlite:///", "")
