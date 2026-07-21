@@ -94,7 +94,10 @@ def create_app():
         return {"now": datetime.now(timezone.utc)}
 
     with app.app_context():
-        db.create_all()
+        # Only create tables if no migrations exist (dev fallback)
+        import os
+        if not os.path.exists(os.path.join(app.root_path, '..', 'migrations', 'env.py')):
+            db.create_all()
 
     register_routes(app)
     register_error_handlers(app)
